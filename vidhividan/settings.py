@@ -18,7 +18,7 @@ from datetime import timedelta
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 env = environ.Env(DEBUG=bool, ALLOWED_HOSTS=list)
-env_file = BASE_DIR / 'vidhividhan/.env.dev'
+env_file = os.path.join(BASE_DIR ,'vidhividan/.env.dev')
 environ.Env.read_env(env_file=env_file, overwrite=True)
 
 # Quick-start development settings - unsuitable for production
@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
+    'drf_yasg',
     'users',
 ]
 
