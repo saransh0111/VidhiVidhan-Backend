@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.utils.timezone import now
 from django.contrib.auth.models import PermissionsMixin
+from helper import keys
+
+from helper.models import CreationModificationBase
 
 class UserManager(BaseUserManager):
     def _create_user(self, mobile, password, is_staff, is_superuser, **extra_fields):
@@ -53,7 +56,7 @@ class User(AbstractBaseUser,PermissionsMixin):
     def __str__(self):
         return f'{self.mobile}'
     
-class Customer(models.Model):
+class Customer(CreationModificationBase):
     user = models.OneToOneField(to="users.User", on_delete=models.CASCADE, related_name='_customer')
     profile_image = models.FileField(upload_to='user/profile/',blank=True,null=True)
     full_name =  models.CharField(max_length=100,blank=True,null=True)
@@ -64,3 +67,33 @@ class Customer(models.Model):
     def __str__(self):
         return f'{self.full_name}'
     
+class ShopOwner(CreationModificationBase):
+    user = models.OneToOneField(to="users.User", on_delete=models.CASCADE, related_name='_owner')
+    profile_image = models.FileField(upload_to='user/profile/',blank=True,null=True)
+    shop_name =  models.CharField(max_length=100,blank=True,null=True)
+    address = models.CharField(max_length=100, blank=True,null=True)
+    description = models.CharField(max_length=200, blank=True,null=True)
+    is_new = models.BooleanField(default=False, help_text='detail of this user is not filled')
+    pin_code = models.CharField(max_length=100,blank=True,null=True)
+    products = models.ManyToManyField("market.Products", verbose_name="shop products")
+        
+    def __str__(self):
+        return f'{self.shop_name}'
+    
+class Pandit(CreationModificationBase):
+    name = models.CharField(max_length=100,blank=True,null=True)
+    profile_image = models.FileField(upload_to='user/profile/',blank=True,null=True)
+    price = models.FloatField(max_length=100, verbose_name="pandit price for booking")
+    
+class OTPManager(CreationModificationBase):
+    ''' This model store mobile number and OTP so that it can be used for validation '''
+    mobile = models.CharField(max_length = 10, unique = True)
+    otp = models.CharField(max_length = 4, blank=True, null=True)
+    count = models.IntegerField(default=0, help_text="Count of OTP sent")
+    
+    class Meta:
+        verbose_name = keys.OTP_MANAGER
+        verbose_name_plural = keys.OTP_MANAGERS
+
+    def __str__(self):
+        return str(self.otp) + ' OTP is sent to ' + str(self.mobile)

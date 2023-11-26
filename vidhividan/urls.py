@@ -42,7 +42,8 @@ urlpatterns = [
 # application
 urlpatterns += [
  path('admin/', admin.site.urls),
- path('api/', include('users.urls')),
+ path('api/users/', include('users.urls')),
+ path('api/market/', include('market.urls'))
 ]
 
 # Media files settings
