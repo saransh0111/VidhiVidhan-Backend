@@ -1,5 +1,5 @@
 from django.contrib import admin
-from users.models import Customer, Pandit, ShopOwner, User
+from users.models import Customer, OTPManager, Pandit, ShopOwner, User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 @admin.register(User)
@@ -19,6 +19,4 @@ class myapp(admin.ModelAdmin):
 class myapp(admin.ModelAdmin):
     list_display = ['shop_name', 'profile_image', 'address', 'description']
 
-# @admin.register(OTPManager)
-# class myapp(admin.ModelAdmin):
-#     list_display = ['id', 'email', 'otp', ]
+admin.site.register(OTPManager)

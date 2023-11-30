@@ -28,6 +28,7 @@ class SendOTP(generics.GenericAPIView):
     API RESPONSE: Dictionary
     """
     serializer_class = SignUpSerializer
+    
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid(raise_exception=False):
@@ -106,7 +107,10 @@ class ResendOTP(generics.GenericAPIView):
         mobile = request.data[keys.MOBILE]
         is_mobile_in_OTPManager = UserFunctions.check_mobile_in_OTPManager(mobile)
         if is_mobile_in_OTPManager.exists():
-            new_otp = generate_otp()
+            # new_otp = generate_otp()
+            # otp = generate_otp()
+            mobile_number = str(mobile)
+            new_otp = mobile_number[:4]
             is_otp_update = is_mobile_in_OTPManager.update(otp=new_otp)
             if is_otp_update:
                 return Response(ResponseHandling.success_response_message(messages.OTP_TOKEN_SUCCESFULLY_SENT, {}), status=status200)

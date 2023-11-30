@@ -11,13 +11,12 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 class SignUpSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(max_length=100)
-    profile_image = serializers.FileField()
     address = serializers.CharField()
     pin_code = serializers.CharField()
 
     class Meta:
         model = User
-        fields = ['mobile','full_name','profile_image','address','pin_code']
+        fields = ['mobile','full_name','address','pin_code']
 
 class VerifyOTPSerializer(serializers.ModelSerializer):
     """ SERIALIZER FOR VERIFYING OTPs """

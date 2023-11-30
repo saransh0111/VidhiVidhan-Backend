@@ -176,7 +176,7 @@ STATIC_URL = '/static/'
 
 ##################### STATIC MEDIA HANDLING SETTINGS ################
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static_cdn", "static-root")
+STATIC_ROOT = os.path.join(BASE_DIR, "static", "static-root")
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "static_cdn", "media-root")
+MEDIA_ROOT = os.path.join(BASE_DIR, "static", "media-root")
