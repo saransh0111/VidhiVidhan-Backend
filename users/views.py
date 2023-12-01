@@ -119,6 +119,35 @@ class ResendOTP(generics.GenericAPIView):
         else:
             return Response(ResponseHandling.failure_response_message(messages.MOBILE_NOT_RECONGNISED, {}), status=status400)
 
+class LoginAPI(generics.GenericAPIView):
+    """ 
+    API TO LOGIN USER
+    """
+    serializer_class = VerifyOTPSerializer
+    
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid(raise_exception=False):
+            errors = serializer.errors
+            err = error_message_function(errors)
+            return Response(ResponseHandling.failure_response_message(err, {}), status=status400)
+        mobile = request.data[keys.MOBILE]
+        if mobile is None :
+            return Response(ResponseHandling.failure_response_message(messages.ENTER_VALID_NUMBER, ""), status=status400)
+        if not isMobileValid(mobile):
+            return Response(ResponseHandling.failure_response_message(messages.ENTER_VALID_NUMBER, ""), status=status400)
+        # otp = generate_otp()
+        mobile_number = str(mobile)
+        otp = mobile_number[:4]
+        is_mobile_number_in_OTPManager = UserFunctions.check_mobile_in_OTPManager(mobile)
+        if is_mobile_number_in_OTPManager.exists():
+            is_mobile_number_in_OTPManager.delete()
+        UserFunctions.create_entry_in_OTPManager(mobile,otp)
+        if not UserFunctions.check_is_mobile_exist(mobile):
+            User.objects.create(mobile=mobile)
+        return Response(ResponseHandling.success_response_message(messages.OTP_TOKEN_SUCCESFULLY_SENT, ""), status=status200)   
+    
+
 # This need to change according to user
 
 class GetUserProfileAPI(generics.RetrieveAPIView):
